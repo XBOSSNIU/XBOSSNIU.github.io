@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="ZH-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,viewport-fit=cover"><title>redis持久化 | Xboss</title><meta name="author" content="Xboss"><meta name="copyright" content="Xboss"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="为什么redis需要持久化Redis是个基于内存的数据库。那服务一旦宕机，内存中的数据将全部丢失。通常的解决方案是从后端数据库恢复这些数据，但后端数据库有性能瓶颈，如果是大数据量的恢复，1、会对数据库带来巨大的压力，2、数据库的性能不如Redis。导致程序响应慢。所以对Redis来说，实现数据的持久化，避免从后端数据库中恢复数据，是至关重要的。  持久化方案：RDB和AOFRDBRDB 就是 Re">
+<!DOCTYPE html><html lang="ZH-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,viewport-fit=cover"><title>redis持久化 | Xboss</title><meta name="author" content="Xboss"><meta name="copyright" content="Xboss"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="为什么redis需要持久化 Redis是个基于内存的数据库。那服务一旦宕机，内存中的数据将全部丢失。通常的解决方案是从后端数据库恢复这些数据，但后端数据库有性能瓶颈，如果是大数据量的恢复，1、会对数据库带来巨大的压力，2、数据库的性能不如Redis。导致程序响应慢。所以对Redis来说，实现数据的持久化，避免从后端数据库中恢复数据，是至关重要的。  持久化方案：RDB和AOFRDBRDB 就是 R">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis持久化">
 <meta property="og:url" content="http://xbossniu.github.io/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96/index.html">
 <meta property="og:site_name" content="Xboss">
-<meta property="og:description" content="为什么redis需要持久化Redis是个基于内存的数据库。那服务一旦宕机，内存中的数据将全部丢失。通常的解决方案是从后端数据库恢复这些数据，但后端数据库有性能瓶颈，如果是大数据量的恢复，1、会对数据库带来巨大的压力，2、数据库的性能不如Redis。导致程序响应慢。所以对Redis来说，实现数据的持久化，避免从后端数据库中恢复数据，是至关重要的。  持久化方案：RDB和AOFRDBRDB 就是 Re">
+<meta property="og:description" content="为什么redis需要持久化 Redis是个基于内存的数据库。那服务一旦宕机，内存中的数据将全部丢失。通常的解决方案是从后端数据库恢复这些数据，但后端数据库有性能瓶颈，如果是大数据量的恢复，1、会对数据库带来巨大的压力，2、数据库的性能不如Redis。导致程序响应慢。所以对Redis来说，实现数据的持久化，避免从后端数据库中恢复数据，是至关重要的。  持久化方案：RDB和AOFRDBRDB 就是 R">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg">
 <meta property="article:published_time" content="2023-05-26T05:46:00.952Z">
-<meta property="article:modified_time" content="2023-05-26T06:43:33.910Z">
+<meta property="article:modified_time" content="2023-05-26T07:40:54.391Z">
 <meta property="article:author" content="Xboss">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2023-05-26 14:43:33'
+  postUpdate: '2023-05-26 15:40:54'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -161,11 +161,11 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Xboss"><span class="site-name">Xboss</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">redis持久化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-05-26T05:46:00.952Z" title="Created 2023-05-26 13:46:00">2023-05-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-05-26T06:43:33.910Z" title="Updated 2023-05-26 14:43:33">2023-05-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/redis/">redis</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="redis持久化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="为什么redis需要持久化"><a href="#为什么redis需要持久化" class="headerlink" title="为什么redis需要持久化"></a>为什么redis需要持久化</h2><p>Redis是个基于内存的数据库。那服务一旦宕机，内存中的数据将全部丢失。通常的解决方案是从后端数据库恢复这些数据，但后端数据库有性能瓶颈，如果是大数据量的恢复，1、会对数据库带来巨大的压力，2、数据库的性能不如Redis。导致程序响应慢。所以对Redis来说，实现数据的持久化，避免从后端数据库中恢复数据，是至关重要的。</p>
-<hr>
-<h2 id="持久化方案：RDB和AOF"><a href="#持久化方案：RDB和AOF" class="headerlink" title="持久化方案：RDB和AOF"></a>持久化方案：RDB和AOF</h2><h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>RDB 就是 Redis DataBase 的缩写，中文名为快照&#x2F;内存快照，RDB持久化是把当前进程数据生成快照保存到磁盘上的过程，由于是某一时刻的快照，那么快照中的值要早于或者等于内存中的值。</p>
-<hr>
-<h4 id="手动执行"><a href="#手动执行" class="headerlink" title="手动执行"></a>手动执行</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">save</span><br><span class="line">bgsave</span><br></pre></td></tr></table></figure>
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">12</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Xboss"><span class="site-name">Xboss</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">redis持久化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-05-26T05:46:00.952Z" title="Created 2023-05-26 13:46:00">2023-05-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-05-26T07:40:54.391Z" title="Updated 2023-05-26 15:40:54">2023-05-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/redis/">redis</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="redis持久化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="为什么redis需要持久化"><a href="#为什么redis需要持久化" class="headerlink" title="为什么redis需要持久化"></a>为什么redis需要持久化</h1><blockquote>
+<p>Redis是个基于内存的数据库。那服务一旦宕机，内存中的数据将全部丢失。通常的解决方案是从后端数据库恢复这些数据，但后端数据库有性能瓶颈，如果是大数据量的恢复，1、会对数据库带来巨大的压力，2、数据库的性能不如Redis。导致程序响应慢。所以对Redis来说，实现数据的持久化，避免从后端数据库中恢复数据，是至关重要的。</p>
+</blockquote>
+<h1 id="持久化方案：RDB和AOF"><a href="#持久化方案：RDB和AOF" class="headerlink" title="持久化方案：RDB和AOF"></a>持久化方案：RDB和AOF</h1><h2 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h2><p>RDB 就是 Redis DataBase 的缩写，中文名为快照&#x2F;内存快照，RDB持久化是把当前进程数据生成快照保存到磁盘上的过程，由于是某一时刻的快照，那么快照中的值要早于或者等于内存中的值。</p>
+<h3 id="手动执行"><a href="#手动执行" class="headerlink" title="手动执行"></a>手动执行</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">save</span><br><span class="line">bgsave</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li><p><strong>save命令</strong>：阻塞当前Redis服务器，直到RDB过程完成为止，对于内存 比较大的实例会造成长时间<strong>阻塞</strong>，线上环境不建议使用</p>
@@ -174,42 +174,51 @@
 <p><strong>注意：</strong> bgsave命令是针对save阻塞问题做的优化。Redis内部所有涉及到RDB操作都采用bgsave的方式，save命令可以放弃使用</p>
 </li>
 </ul>
-<hr>
-<h4 id="自动执行"><a href="#自动执行" class="headerlink" title="自动执行"></a>自动执行</h4><blockquote>
-<p>在以下4种情况时会自动触发</p>
-</blockquote>
+<h3 id="自动执行"><a href="#自动执行" class="headerlink" title="自动执行"></a>自动执行</h3><p>在以下4种情况时会自动触发</p>
+<blockquote>
 <ul>
 <li>redis.conf中配置<code>save m n</code>，即在m秒内有n次修改时，自动触发bgsave生成rdb文件；</li>
 <li>主从复制时，从节点要从主节点进行全量复制时也会触发bgsave操作，生成当时的快照发送到从节点；</li>
 <li>执行debug reload命令重新加载redis时也会触发bgsave操作；</li>
 <li>默认情况下执行shutdown命令时，如果没有开启aof持久化，那么也会触发bgsave操作；</li>
 </ul>
-<h5 id="save配置（redis-conf中配置）"><a href="#save配置（redis-conf中配置）" class="headerlink" title="save配置（redis.conf中配置）"></a><strong>save配置</strong>（redis.conf中配置）</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">save second changes</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="save配置（redis-conf中配置）"><a href="#save配置（redis-conf中配置）" class="headerlink" title="save配置（redis.conf中配置）"></a><strong>save配置</strong>（redis.conf中配置）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">save second changes</span><br></pre></td></tr></table></figure>
 
+<blockquote>
 <p>说明：满足限定时间范围内key的变化数量达到指定数量即进行持久化</p>
 <p><strong>注意：</strong> save配置要根据实际业务情况进行设置，频度过高或过低都会出现性能问题，结果可能是灾难性的</p>
 <p> save配置中对于second与changes设置通常具有互补对应关系，尽量不要设置成包含性关系</p>
 <p> save配置启动后执行的是bgsave操作</p>
-<h5 id="save指令相关配置"><a href="#save指令相关配置" class="headerlink" title="save指令相关配置"></a><strong>save指令相关配置</strong></h5><ul>
+</blockquote>
+<h4 id="save指令相关配置"><a href="#save指令相关配置" class="headerlink" title="save指令相关配置"></a><strong>save指令相关配置</strong></h4><ul>
 <li>dbfilename  dump.rdb</li>
 </ul>
+<blockquote>
 <p>说明：设置本地数据库文件名，默认值为 dump.rdb</p>
 <p>经验：通常设置为<strong>dump-<strong><strong>端口号</strong></strong>.rdb</strong></p>
+</blockquote>
 <ul>
 <li>dir</li>
 </ul>
+<blockquote>
 <p>说明：设置存储.rdb文件的路径</p>
 <p>经验：通常设置成存储空间较大的目录中，目录名称<strong>data</strong></p>
+</blockquote>
 <ul>
 <li>rdbcompression yes</li>
 </ul>
+<blockquote>
 <p>说明：设置存储至本地数据库时是否压缩数据，默认为 yes，采用 LZF 压缩</p>
 <p>经验：通常默认为开启状态，如果设置为no，可以节省 CPU 运行时间，但会使存储的文件变大（巨大）</p>
+</blockquote>
 <ul>
 <li>rdbchecksum yes</li>
 </ul>
+<blockquote>
 <p>说明：设置是否进行RDB文件格式校验，该校验过程在写文件和读文件过程均进行</p>
 <p>经验：通常默认为开启状态，如果设置为no，可以节约读写性过程约10%时间消耗，但是存储一定的数据损坏风险</p>
+</blockquote>
 <h3 id="实战问题"><a href="#实战问题" class="headerlink" title="实战问题"></a>实战问题</h3><ul>
 <li><strong>由于生产环境中我们为Redis开辟的内存区域都比较大（例如6GB），那么将内存中的数据同步到硬盘的过程可能就会持续比较长的时间，而实际情况是这段时间Redis服务一般都会收到数据写操作请求。那么如何保证数据一致性呢</strong>？</li>
 </ul>
@@ -235,7 +244,201 @@
 <p>那么，有什么其他好方法吗？此时，我们可以做增量快照，就是指做了一次全量快照后，后续的快照只对修改的数据进行快照记录，这样可以避免每次全量快照的开销。这个比较好理解。</p>
 <p>但是它需要我们使用额外的元数据信息去记录哪些数据被修改了，这会带来额外的<strong>空间开销问题</strong>。那么，还有什么方法既能利用 RDB 的快速恢复，又能以较小的开销做到尽量少丢数据呢？且看后文中4.0版本中引入的RDB和AOF的混合方式。</p>
 </blockquote>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://xbossniu.github.io">Xboss</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://xbossniu.github.io/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96/">http://xbossniu.github.io/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/redis/">redis</a></div><div class="post_share"><div class="social-share" data-image="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Seata/redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" title="Seata中四种解决分布式事务的模式"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Seata中四种解决分布式事务的模式</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Xboss</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88redis%E9%9C%80%E8%A6%81%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">为什么redis需要持久化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E6%A1%88%EF%BC%9ARDB%E5%92%8CAOF"><span class="toc-number">2.</span> <span class="toc-text">持久化方案：RDB和AOF</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB"><span class="toc-number">2.1.</span> <span class="toc-text">RDB</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E6%89%A7%E8%A1%8C"><span class="toc-number">2.1.1.</span> <span class="toc-text">手动执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E6%89%A7%E8%A1%8C"><span class="toc-number">2.1.2.</span> <span class="toc-text">自动执行</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#save%E9%85%8D%E7%BD%AE%EF%BC%88redis-conf%E4%B8%AD%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">save配置（redis.conf中配置）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#save%E6%8C%87%E4%BB%A4%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">save指令相关配置</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E9%97%AE%E9%A2%98"><span class="toc-number">2.2.</span> <span class="toc-text">实战问题</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96/" title="redis持久化">redis持久化</a><time datetime="2023-05-26T05:46:00.952Z" title="Created 2023-05-26 13:46:00">2023-05-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Seata/redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" title="Seata中四种解决分布式事务的模式">Seata中四种解决分布式事务的模式</a><time datetime="2023-05-20T11:01:20.503Z" title="Created 2023-05-20 19:01:20">2023-05-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Seata/Seata%E7%9A%84%E5%9B%9B%E7%A7%8D%E8%A7%A3%E5%86%B3%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E6%A8%A1%E5%BC%8F/" title="Seata中四种解决分布式事务的模式">Seata中四种解决分布式事务的模式</a><time datetime="2023-05-18T07:24:07.548Z" title="Created 2023-05-18 15:24:07">2023-05-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Seata/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" title="分布式事务">分布式事务</a><time datetime="2023-05-18T06:51:24.109Z" title="Created 2023-05-18 14:51:24">2023-05-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/RabbitMQ/RabbitMQ/" title="消息队列">消息队列</a><time datetime="2023-05-04T15:39:40.024Z" title="Created 2023-05-04 23:39:40">2023-05-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Xboss</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+<h3 id="RDB优点"><a href="#RDB优点" class="headerlink" title="RDB优点"></a><strong>RDB优点</strong></h3><blockquote>
+<ul>
+<li><p>RDB是一个紧凑压缩的二进制文件，存储效率较高</p>
+</li>
+<li><p>RDB内部存储的是redis在某个时间点的数据快照，非常适合用于数据备份，全量复制等场景</p>
+</li>
+<li><p>RDB恢复数据的速度要比AOF快很多</p>
+</li>
+<li><p>应用：服务器中每X小时执行bgsave备份，并将RDB文件拷贝到远程机器中，用于灾难恢复。</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="Rdb缺点"><a href="#Rdb缺点" class="headerlink" title="Rdb缺点"></a><strong>Rdb缺点</strong></h3><blockquote>
+<ul>
+<li><p>RDB方式无论是执行指令还是利用配置，无法做到实时持久化，具有较大的可能性丢失数据</p>
+</li>
+<li><p>bgsave指令每次运行要执行fork操作创建子进程，要牺牲掉一些性能</p>
+</li>
+<li><p>Redis的众多版本中未进行RDB文件格式的版本统一，有可能出现各版本服务之间数据格式无法兼容现象</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><h3 id="AOF概念"><a href="#AOF概念" class="headerlink" title="AOF概念"></a><strong>AOF概念</strong></h3><blockquote>
+<ul>
+<li>AOF(append only file)持久化：以独立日志的方式记录每次写命令，重启时再重新执行AOF文件中命令</li>
+</ul>
+<p>达到恢复数据的目的。与RDB相比可以简单描述为改记录数据为记录数据产生的过程</p>
+<ul>
+<li>AOF的主要作用是解决了数据持久化的实时性，目前已经是Redis持久化的主流方式</li>
+</ul>
+</blockquote>
+<h3 id="AOF写数据三种策略-appendfsync"><a href="#AOF写数据三种策略-appendfsync" class="headerlink" title="**AOF写数据三种策略(**appendfsync)"></a>**AOF写数据三种策略(**appendfsync)</h3><blockquote>
+<ul>
+<li>always(每次）</li>
+</ul>
+<p>每次写入操作均同步到AOF文件中，数据零误差，性能较低</p>
+<ul>
+<li>everysec（每秒）</li>
+</ul>
+<p>每秒将缓冲区中的指令同步到AOF文件中，数据准确性较高，性能较高</p>
+<p>在系统突然宕机的情况下丢失1秒内的数据</p>
+<ul>
+<li>no（系统控制）</li>
+</ul>
+<p>由操作系统控制每次同步到AOF文件的周期，整体过程不可控</p>
+</blockquote>
+<h3 id="AOF启动配置（redis-conf）"><a href="#AOF启动配置（redis-conf）" class="headerlink" title="AOF启动配置（redis.conf）"></a>AOF启动配置（redis.conf）</h3><blockquote>
+<p>appendonly  yes|no</p>
+</blockquote>
+<p>作用：是否开启AOF持久化功能，默认为不开启状态</p>
+<blockquote>
+<p>appendfsync  always|eyerysec|no</p>
+</blockquote>
+<p>作用：AOF写数据策略</p>
+<h3 id="AOF其他配置"><a href="#AOF其他配置" class="headerlink" title="AOF其他配置"></a>AOF其他配置</h3><blockquote>
+<p>appendfilename filename</p>
+</blockquote>
+<p>作用：AOF持久化文件名，默认文件名未appendonly.aof，建议配置为appendonly-端口号.aof</p>
+<blockquote>
+<p>dir </p>
+</blockquote>
+<p>作用：AOF持久化文件保存路径，与RDB持久化文件保持一致即可</p>
+<h3 id="AOF重写"><a href="#AOF重写" class="headerlink" title="AOF重写"></a>AOF重写</h3><blockquote>
+<p>随着命令不断写入AOF，文件会越来越大，为了解决这个问题，Redis引入了AOF重写机制压缩文件体积。AOF文件重写是将Redis进程内的数据转化为写命令同步到新AOF文件的过程。简单说就是将对同一个数据的若干个条命令执行结果转化成最终结果数据对应的指令进行记录</p>
+</blockquote>
+<h4 id="AOF重写作用"><a href="#AOF重写作用" class="headerlink" title="AOF重写作用"></a>AOF重写作用</h4><blockquote>
+<ul>
+<li><p>降低磁盘占用量，提高磁盘利用率</p>
+</li>
+<li><p>提高持久化效率，降低持久化写时间，提高IO性能</p>
+</li>
+<li><p>降低数据恢复用时，提高数据恢复效率</p>
+</li>
+</ul>
+</blockquote>
+<h4 id="AOF重写规则"><a href="#AOF重写规则" class="headerlink" title="AOF重写规则"></a>AOF重写规则</h4><blockquote>
+<ul>
+<li><p>进程内已超时的数据不再写入文件</p>
+</li>
+<li><p>忽略无效指令，重写时使用进程内数据直接生成，这样新的AOF文件只保留最终数据的写入命令</p>
+<p>如del key1、 hdel key2、srem key3、set key4 111、set key4 222等</p>
+</li>
+<li><p>对同一数据的多条写命令合并为一条命令</p>
+<p>如lpush list1 a、lpush list1 b、 lpush list1 c 可以转化为：lpush list1 a b c。</p>
+<p>为防止数据量过大造成客户端缓冲区溢出，对list、set、hash、zset等类型，每条指令最多写入64个元素</p>
+</li>
+</ul>
+</blockquote>
+<h4 id="AOF重写方式"><a href="#AOF重写方式" class="headerlink" title="AOF重写方式"></a>AOF重写方式</h4><p>手动重写</p>
+<blockquote>
+<p>bgrewriteaof</p>
+</blockquote>
+<p>自动重写</p>
+<blockquote>
+<p>auto-aof-rewrite-min-size  size</p>
+<p>auto-aof-rewrite-percentage percent</p>
+</blockquote>
+<p><code>auto-aof-rewrite-percentage</code>：在生产环境下，技术人员不可能随时随地使用“BGREWRITEAOF”命令去重写AOF文件。所以更多时候我们需要依靠Redis中对AOF文件的自动重写策略。Redis中对触发自动重写AOF文件的操作提供了两个设置：auto-aof-rewrite-percentage表示如果当前AOF文件的大小超过了上次重写后AOF文件的百分之多少后，就再次开始重写AOF文件。例如该参数值的默认设置值为100，意思就是如果AOF文件的大小超过上次AOF文件重写后的1倍，就启动重写操作。</p>
+<p><code>auto-aof-rewrite-min-size</code>：auto-aof-rewrite-min-size设置项表示启动AOF文件重写操作的AOF文件最小大小。如果AOF文件大小低于这个值，则不会触发重写操作。注意，auto-aof-rewrite-percentage和auto-aof-rewrite-min-size只是用来控制Redis中自动对AOF文件进行重写的情况，如果是技术人员手动调用“BGREWRITEAOF”命令，则不受这两个限制条件左右。</p>
+<ul>
+<li><strong>AOF重写会阻塞吗</strong>？</li>
+</ul>
+<blockquote>
+<p>AOF重写过程是由后台进程bgrewriteaof来完成的。主线程fork出后台的bgrewriteaof子进程，fork会把主线程的内存拷贝一份给bgrewriteaof子进程，这里面就包含了数据库的最新数据。然后，bgrewriteaof子进程就可以在不影响主线程的情况下，逐一把拷贝的数据写成操作，记入重写日志。</p>
+<p>所以aof在重写时，在fork进程时是会阻塞住主线程的。</p>
+</blockquote>
+<ul>
+<li><strong>AOF日志何时会重写</strong>？</li>
+</ul>
+<blockquote>
+<p>有两个配置项控制AOF重写的触发：</p>
+<p><code>auto-aof-rewrite-min-size</code>:表示运行AOF重写时文件的最小大小，默认为64MB。</p>
+<p><code>auto-aof-rewrite-percentage</code>:这个值的计算方式是，当前aof文件大小和上一次重写后aof文件大小的差值，再除以上一次重写后aof文件大小。也就是当前aof文件比上一次重写后aof文件的增量大小，和上一次重写后aof文件大小的比值。</p>
+</blockquote>
+<ul>
+<li><strong>重写日志时，有新数据写入咋整</strong>？</li>
+</ul>
+<blockquote>
+<p>重写过程总结为：“一个拷贝，两处日志”。在fork出子进程时的拷贝，以及在重写时，如果有新数据写入，主线程就会将命令记录到两个aof日志内存缓冲区中。如果AOF写回策略配置的是always，则直接将命令写回旧的日志文件，并且保存一份命令至AOF重写缓冲区，这些操作对新的日志文件是不存在影响的。（旧的日志文件：主线程使用的日志文件，新的日志文件：bgrewriteaof进程使用的日志文件）</p>
+<p>而在bgrewriteaof子进程完成会日志文件的重写操作后，会提示主线程已经完成重写操作，主线程会将AOF重写缓冲中的命令追加到新的日志文件后面。这时候在高并发的情况下，AOF重写缓冲区积累可能会很大，这样就会造成阻塞，Redis后来通过Linux管道技术让aof重写期间就能同时进行回放，这样aof重写结束后只需回放少量剩余的数据即可。</p>
+<p>最后通过修改文件名的方式，保证文件切换的原子性。</p>
+<p>在AOF重写日志期间发生宕机的话，因为日志文件还没切换，所以恢复数据时，用的还是旧的日志文件。</p>
+</blockquote>
+<ul>
+<li><strong>主线程fork出子进程的是如何复制内存数据的</strong>？</li>
+</ul>
+<blockquote>
+<p>fork采用操作系统提供的写时复制（copy on write）机制，就是为了避免一次性拷贝大量内存数据给子进程造成阻塞。fork子进程时，子进程时会拷贝父进程的页表，即虚实映射关系（虚拟内存和物理内存的映射索引表），而不会拷贝物理内存。这个拷贝会消耗大量cpu资源，并且拷贝完成前会阻塞主线程，阻塞时间取决于内存中的数据量，数据量越大，则内存页表越大。拷贝完成后，父子进程使用相同的内存地址空间。但主进程是可以有数据写入的，这时候就会拷贝物理内存中的数据。在主进程有数据写入时，而这个数据刚好在页a中，操作系统会创建这个页面的副本（页a的副本），即拷贝当前页的物理数据，将其映射到主进程中，而子进程还是使用原来的的页a。</p>
+</blockquote>
+<ul>
+<li><strong>在重写日志整个过程时，主线程有哪些地方会被阻塞</strong>？</li>
+</ul>
+<blockquote>
+<ol>
+<li>fork子进程时，需要拷贝虚拟页表，会对主线程阻塞。</li>
+<li>主进程有bigkey写入时，操作系统会创建页面的副本，并拷贝原有的数据，会对主线程阻塞。</li>
+<li>子进程重写日志完成后，主进程追加aof重写缓冲区时可能会对主线程阻塞。</li>
+</ol>
+</blockquote>
+<ul>
+<li><strong>为什么AOF重写不复用原AOF日志</strong>？</li>
+</ul>
+<blockquote>
+<p>两方面原因：</p>
+<ol>
+<li>父子进程写同一个文件会产生竞争问题，影响父进程的性能。</li>
+<li>如果AOF重写过程中失败了，相当于污染了原本的AOF文件，无法做恢复数据使用。</li>
+</ol>
+</blockquote>
+<h2 id="RDB与AOF的选择"><a href="#RDB与AOF的选择" class="headerlink" title="RDB与AOF的选择"></a><strong>RDB与AOF的选择</strong></h2><blockquote>
+<p>对数据非常敏感，建议使用默认的AOF持久化方案</p>
+<ul>
+<li>AOF持久化策略使用everysecond，每秒钟fsync一次。该策略redis仍可以保持很好的处理性能，当出</li>
+</ul>
+<p>现问题时，最多丢失0-1秒内的数据。</p>
+<ul>
+<li><p>注意：由于AOF文件存储体积较大，且恢复速度较慢</p>
+</li>
+<li><p>数据呈现阶段有效性，建议使用RDB持久化方案</p>
+</li>
+<li><p>数据可以良好的做到阶段内无丢失（该阶段是开发者或运维人员手工维护的），且恢复速度较快，阶段</p>
+</li>
+</ul>
+<p>点数据恢复通常采用RDB方案</p>
+<ul>
+<li>注意：利用RDB实现紧凑的数据持久化会使Redis降的很低，慎重总结：</li>
+</ul>
+<p>综合比对</p>
+<ul>
+<li><p>RDB与AOF的选择实际上是在做一种权衡，每种都有利有弊</p>
+</li>
+<li><p>如不能承受数分钟以内的数据丢失，对业务数据非常敏感，选用AOF</p>
+</li>
+<li><p>如能承受数分钟以内的数据丢失，且追求大数据集的恢复速度，选用RDB</p>
+</li>
+<li><p>灾难恢复选用RDB</p>
+</li>
+<li><p>双保险策略，同时开启 RDB 和 AOF，重启后，Redis优先使用 AOF 来恢复数据，降低丢失数据的量</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="RDB和AOF混合方式（4-0版本"><a href="#RDB和AOF混合方式（4-0版本" class="headerlink" title="RDB和AOF混合方式（4.0版本)"></a>RDB和AOF混合方式（4.0版本)</h2><blockquote>
+<p>Redis 4.0 中提出了一个<strong>混合使用 AOF 日志和内存快照</strong>的方法。简单来说，内存快照以一定的频率执行，在两次快照之间，使用 AOF 日志记录这期间的所有命令操作。这样一来，快照不用很频繁地执行，这就避免了频繁 fork 对主线程的影响。而且，AOF 日志也只用记录两次快照间的操作，也就是说，不需要记录所有操作了，因此，就不会出现文件过大的情况了，也可以避免重写开销。这个方法既能享受到 RDB 文件快速恢复的好处，又能享受到 AOF 只记录操作命令的简单优势, 实际环境中用的很多。</p>
+</blockquote>
+<h2 id="从持久化中恢复数据"><a href="#从持久化中恢复数据" class="headerlink" title="从持久化中恢复数据"></a>从持久化中恢复数据</h2><p><strong>数据的备份、持久化做完了，我们如何从这些持久化文件中恢复数据呢？如果一台服务器上有既有RDB文件，又有AOF文件，该加载谁呢？</strong></p>
+<blockquote>
+<ul>
+<li>redis重启时判断是否开启aof，如果开启了aof，那么就优先加载aof文件；</li>
+<li>如果aof存在，那么就去加载aof文件，加载成功的话redis重启成功，如果aof文件加载失败，那么会打印日志表示启动失败，此时可以去修复aof文件后重新启动；</li>
+<li>若aof文件不存在，那么redis就会转而去加载rdb文件，如果rdb文件不存在，redis直接启动成功；</li>
+<li>如果rdb文件存在就会去加载rdb文件恢复数据，如加载失败则打印日志提示启动失败，如加载成功，那么redis重启成功，且使用rdb文件恢复数据；</li>
+</ul>
+<p>那么为什么会优先加载AOF呢？因为AOF保存的数据更完整，通过上面的分析我们知道AOF基本上最多损失1s的数据。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://xbossniu.github.io">Xboss</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://xbossniu.github.io/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96/">http://xbossniu.github.io/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/redis/">redis</a></div><div class="post_share"><div class="social-share" data-image="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Seata/redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" title="Seata中四种解决分布式事务的模式"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">Seata中四种解决分布式事务的模式</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Xboss</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88redis%E9%9C%80%E8%A6%81%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">为什么redis需要持久化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E6%A1%88%EF%BC%9ARDB%E5%92%8CAOF"><span class="toc-number">2.</span> <span class="toc-text">持久化方案：RDB和AOF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RDB"><span class="toc-number">2.1.</span> <span class="toc-text">RDB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E6%89%A7%E8%A1%8C"><span class="toc-number">2.1.1.</span> <span class="toc-text">手动执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E6%89%A7%E8%A1%8C"><span class="toc-number">2.1.2.</span> <span class="toc-text">自动执行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#save%E9%85%8D%E7%BD%AE%EF%BC%88redis-conf%E4%B8%AD%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">save配置（redis.conf中配置）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#save%E6%8C%87%E4%BB%A4%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">save指令相关配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%E9%97%AE%E9%A2%98"><span class="toc-number">2.1.3.</span> <span class="toc-text">实战问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB%E4%BC%98%E7%82%B9"><span class="toc-number">2.1.4.</span> <span class="toc-text">RDB优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rdb%E7%BC%BA%E7%82%B9"><span class="toc-number">2.1.5.</span> <span class="toc-text">Rdb缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AOF"><span class="toc-number">2.2.</span> <span class="toc-text">AOF</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E6%A6%82%E5%BF%B5"><span class="toc-number">2.2.1.</span> <span class="toc-text">AOF概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E5%86%99%E6%95%B0%E6%8D%AE%E4%B8%89%E7%A7%8D%E7%AD%96%E7%95%A5-appendfsync"><span class="toc-number">2.2.2.</span> <span class="toc-text">**AOF写数据三种策略(**appendfsync)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E5%90%AF%E5%8A%A8%E9%85%8D%E7%BD%AE%EF%BC%88redis-conf%EF%BC%89"><span class="toc-number">2.2.3.</span> <span class="toc-text">AOF启动配置（redis.conf）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE"><span class="toc-number">2.2.4.</span> <span class="toc-text">AOF其他配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E9%87%8D%E5%86%99"><span class="toc-number">2.2.5.</span> <span class="toc-text">AOF重写</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF%E9%87%8D%E5%86%99%E4%BD%9C%E7%94%A8"><span class="toc-number">2.2.5.1.</span> <span class="toc-text">AOF重写作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF%E9%87%8D%E5%86%99%E8%A7%84%E5%88%99"><span class="toc-number">2.2.5.2.</span> <span class="toc-text">AOF重写规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AOF%E9%87%8D%E5%86%99%E6%96%B9%E5%BC%8F"><span class="toc-number">2.2.5.3.</span> <span class="toc-text">AOF重写方式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RDB%E4%B8%8EAOF%E7%9A%84%E9%80%89%E6%8B%A9"><span class="toc-number">2.3.</span> <span class="toc-text">RDB与AOF的选择</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RDB%E5%92%8CAOF%E6%B7%B7%E5%90%88%E6%96%B9%E5%BC%8F%EF%BC%884-0%E7%89%88%E6%9C%AC"><span class="toc-number">2.4.</span> <span class="toc-text">RDB和AOF混合方式（4.0版本)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E6%8C%81%E4%B9%85%E5%8C%96%E4%B8%AD%E6%81%A2%E5%A4%8D%E6%95%B0%E6%8D%AE"><span class="toc-number">2.5.</span> <span class="toc-text">从持久化中恢复数据</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/redis/redis%E6%8C%81%E4%B9%85%E5%8C%96/" title="redis持久化">redis持久化</a><time datetime="2023-05-26T05:46:00.952Z" title="Created 2023-05-26 13:46:00">2023-05-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Seata/redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/" title="Seata中四种解决分布式事务的模式">Seata中四种解决分布式事务的模式</a><time datetime="2023-05-20T11:01:20.503Z" title="Created 2023-05-20 19:01:20">2023-05-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Seata/Seata%E7%9A%84%E5%9B%9B%E7%A7%8D%E8%A7%A3%E5%86%B3%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E6%A8%A1%E5%BC%8F/" title="Seata中四种解决分布式事务的模式">Seata中四种解决分布式事务的模式</a><time datetime="2023-05-18T07:24:07.548Z" title="Created 2023-05-18 15:24:07">2023-05-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Seata/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" title="分布式事务">分布式事务</a><time datetime="2023-05-18T06:51:24.109Z" title="Created 2023-05-18 14:51:24">2023-05-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%BE%AE%E6%9C%8D%E5%8A%A1/RabbitMQ/RabbitMQ/" title="消息队列">消息队列</a><time datetime="2023-05-04T15:39:40.024Z" title="Created 2023-05-04 23:39:40">2023-05-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Xboss</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
   function initValine () {
     const valine = new Valine(Object.assign({
       el: '#vcomment',
