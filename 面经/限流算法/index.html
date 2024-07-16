@@ -1,0 +1,279 @@
+<!DOCTYPE html><html lang="ZH-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,viewport-fit=cover"><title>限流算法 | Xboss</title><meta name="author" content="Xboss"><meta name="copyright" content="Xboss"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="限流算法首先我们先来看看什么是限流？限流是指在系统面临高并发、大流量请求的情况下，限制新的流量对系统的访问，从而保证系统服务的安全性。 另一种解释：在计算机网络中，限流就是控制网络接口发送或接收请求的速率，它可防止DoS攻击和限制Web爬虫。 那么我们为什么会限流？日常的业务上有类似秒杀活动、双十一大促或者突发新闻等场景，用户的流量突增，后端服务的处理能力是有限的，如果不能处理好突发流量，后端服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="限流算法">
+<meta property="og:url" content="http://xbossniu.github.io/%E9%9D%A2%E7%BB%8F/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="Xboss">
+<meta property="og:description" content="限流算法首先我们先来看看什么是限流？限流是指在系统面临高并发、大流量请求的情况下，限制新的流量对系统的访问，从而保证系统服务的安全性。 另一种解释：在计算机网络中，限流就是控制网络接口发送或接收请求的速率，它可防止DoS攻击和限制Web爬虫。 那么我们为什么会限流？日常的业务上有类似秒杀活动、双十一大促或者突发新闻等场景，用户的流量突增，后端服务的处理能力是有限的，如果不能处理好突发流量，后端服务">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg">
+<meta property="article:published_time" content="2024-04-12T06:26:23.164Z">
+<meta property="article:modified_time" content="2024-07-16T02:57:17.052Z">
+<meta property="article:author" content="Xboss">
+<meta property="article:tag" content="面经">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://xbossniu.github.io/%E9%9D%A2%E7%BB%8F/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: 'Just',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '限流算法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-07-16 10:57:17'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">15</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Xboss"><span class="site-name">Xboss</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">限流算法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-04-12T06:26:23.164Z" title="Created 2024-04-12 14:26:23">2024-04-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-07-16T02:57:17.052Z" title="Updated 2024-07-16 10:57:17">2024-07-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E7%BB%8F/">面经</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="限流算法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post View:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="限流算法"><a href="#限流算法" class="headerlink" title="限流算法"></a>限流算法</h1><p>首先我们先来看看什么是限流？<br>限流是指在系统面临高并发、大流量请求的情况下，限制新的流量对系统的访问，从而保证系统服务的安全性。</p>
+<p>另一种解释：在计算机网络中，限流就是控制网络接口发送或接收请求的速率，它可防止DoS攻击和限制Web爬虫。</p>
+<p>那么我们为什么会限流？<br>日常的业务上有类似秒杀活动、双十一大促或者突发新闻等场景，用户的流量突增，后端服务的处理能力是有限的，如果不能处理好突发流量，后端服务很容易就被打垮，导致整个系统崩溃！</p>
+<p>亦或是爬虫等不正常流量，我们对外暴露的服务都要以最大恶意去防备我们的调用者。我们不清楚调用者会如何调用我们的服务。假设某个调用者开几十个线程一天二十四小时疯狂调用你的服务，不做啥处理咱服务也算完了。更胜的还有DDos攻击。</p>
+<p>接下来一起来看看有哪些限流算法<br><strong>计数限流</strong><br>最简单的限流算法就是计数限流了，例如系统能同时处理100个请求，保存一个计数器，处理了一个请求，计数器加一，一个请求处理完毕之后计数器减一。</p>
+<p>每次请求来的时候看看计数器的值，如果超过阈值要么拒绝。</p>
+<p>非常的简单粗暴，计数器的值要是存内存中就算单机限流算法。存中心存储里，例如 Redis 中，集群机器访问就算分布式限流算法。</p>
+<p>优点就是：简单粗暴，单机在 Java 中可用 Atomic 等原子类、分布式就 Redis incr。</p>
+<p>缺点就是：假设我们允许的阈值是1万，此时计数器的值为0， 当1万个请求在前1秒内一股脑儿的都涌进来，这突发的流量可是顶不住的。缓缓的增加处理和一下子涌入对于程序来说是不一样的。</p>
+<p><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/03d2c9d2f4534022b6e54a37c6d3fe1c.png" alt="在这里插入图片描述"></p>
+<p><strong>固定窗口限流算法</strong><br>首先维护一个计数器，将单位时间段当做一个窗口，计数器记录这个窗口接收请求的次数。</p>
+<p>当次数少于限流阀值，就允许访问，并且计数器+1<br>当次数大于限流阀值，就拒绝访问。<br>当前的时间窗口过去之后，计数器清零。<br>假设单位时间是1秒，限流阀值为3。在单位时间1秒内，每来一个请求,计数器就加1，如果计数器累加的次数超过限流阀值3，后续的请求全部拒绝。等到1s结束后，计数器清0，重新开始计数。</p>
+<p><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/fb4b3cced0014bc3a7d9762d00994919.png" alt="在这里插入图片描述"></p>
+<p>如下图：</p>
+<p>这个时候看起来没有什么问题，但事实总是残酷的！</p>
+<p><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/fc8c23c6132e4620bd8c078e3eab000f.png" alt="img"></p>
+<p>1.一段时间内（不超过时间窗口）系统服务不可用。比如窗口大小为1s，限流大小为100，然后恰好在某个窗口的第1ms来了100个请求，然后第2ms-999ms的请求就都会被拒绝，这段时间用户会感觉系统服务不可用。</p>
+<p>2.窗口切换时可能会产生两倍于阈值流量的请求。假设限流阀值为5个请求，单位时间窗口是1s,如果我们在单位时间内的前0.8-1s和1-1.2s，分别并发5个请求。虽然都没有超过阀值，但是如果算0.8-1.2s,则并发数高达10，已经超过单位时间1s不超过5阀值的定义啦，通过的请求达到了阈值的两倍。</p>
+<p><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/581ff5f1d2314c8e94c2072ffa5f9821.png" alt="在这里插入图片描述"></p>
+<p>为了解决这个问题引入了滑动窗口限流。</p>
+<p><strong>滑动窗口限流</strong><br>滑动窗口限流解决固定窗口临界值的问题，可以保证在任意时间窗口内都不会超过阈值。</p>
+<p>相对于固定窗口，滑动窗口除了需要引入计数器之外还需要记录时间窗口内每个请求到达的时间点，因此对内存的占用会比较多。</p>
+<p>规则如下，假设时间窗口为 1 秒：</p>
+<p>记录每次请求的时间<br>统计每次请求的时间 至 往前推1秒这个时间窗口内请求数，并且 1 秒前的数据可以删除。<br>统计的请求数小于阈值就记录这个请求的时间，并允许通过，反之拒绝。</p>
+<p><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/74a9f296abc440118dd56c1016ed0d02.png" alt="在这里插入图片描述"></p>
+<p>从图中不难看出，滑动窗口算法就是固定窗口的升级版。将计时窗口划分成一个小窗口，滑动窗口算法就退化成了固定窗口算法。而滑动窗口算法其实就是对请求数进行了更细粒度的限流，窗口划分的越多，则限流越精准。</p>
+<p><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/8c71a99fa79946e28ab36d0c84621f52.png" alt="在这里插入图片描述"></p>
+<p>但是滑动窗口和固定窗口都无法解决短时间之内集中流量的突击。</p>
+<p>我们所想的限流场景，例如每秒限制 100 个请求。希望请求每 10ms 来一个，这样我们的流量处理就很平滑，但是真实场景很难控制请求的频率。因此可能存在 5ms 内就打满了阈值的情况。</p>
+<p>当然对于这种情况还是有变型处理的，例如设置多条限流规则。不仅限制每秒 100 个请求，再设置每 10ms 不超过 2 个。</p>
+<p>接下来再说说漏桶，它可以解决时间窗口类的痛点，使得流量更加的平滑。</p>
+<p><strong>漏桶算法</strong><br>漏桶算法面对限流，就更加的柔性，不存在直接的粗暴拒绝。</p>
+<p>它的原理很简单，可以认为就是注水漏水的过程。往漏桶中以任意速率流入水，以固定的速率流出水。当水超过桶的容量时，会被溢出，也就是被丢弃。因为桶容量是不变的，保证了整体的速率。</p>
+<p><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/247cdae809aa421a9e9edccd46d3e764.png" alt="在这里插入图片描述"></p>
+<p>流入的水滴，可以看作是访问系统的请求，这个流入速率是不确定的。<br>桶的容量一般表示系统所能处理的请求数。<br>如果桶的容量满了，就达到限流的阀值，就会丢弃水滴（拒绝请求）<br>流出的水滴，是恒定过滤的，对应服务按照固定的速率处理请求。<br>看到这想到啥，是不是和消息队列思想有点像，削峰填谷。经过漏洞这么一过滤，请求就能平滑的流出，看起来很像很挺完美的？实际上它的优点也即缺点。</p>
+<p>面对突发请求，服务的处理速度和平时是一样的，这其实不是我们想要的，在面对突发流量我们希望在系统平稳的同时，提升用户体验即能更快的处理请求，而不是和正常流量一样，循规蹈矩的处理（看看，之前滑动窗口说流量不够平滑，现在太平滑了又不行，难搞啊）。</p>
+<p>而接下来我们要谈的令牌桶算法能够在一定程度上解决流量突发的问题。</p>
+<p><strong>令牌桶算法</strong><br>令牌桶算法是对漏斗算法的一种改进，除了能够起到限流的作用外，还允许一定程度的流量突发。</p>
+<p>令牌桶算法原理：</p>
+<p>有一个令牌管理员，根据限流大小，定速往令牌桶里放令牌。<br>如果令牌数量满了，超过令牌桶容量的限制，那就丢弃。<br>系统在接受到一个用户请求时，都会先去令牌桶要一个令牌。如果拿到令牌，那么就处理这个请求的业务逻辑；<br>如果拿不到令牌，就直接拒绝这个请求。</p>
+<p><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/4be9c063c75a4fde97fff157678972ba.png" alt="在这里插入图片描述"></p>
+<p>可以看出令牌桶在应对突发流量的时候，桶内假如有 100 个令牌，那么这 100 个令牌可以马上被取走，而不像漏桶那样匀速的消费。所以在应对突发流量的时候令牌桶表现的更佳。</p>
+<p>限流结论<br>1.固定窗口算法实现简单，性能高，但是会有临界突发流量问题，瞬时流量最大可以达到阈值的2倍。</p>
+<p>2.为了解决临界突发流量，可以将窗口划分为多个更细粒度的单元，每次窗口向右移动一个单元，于是便有了滑动窗口算法。</p>
+<p>滑动窗口当流量到达阈值时会瞬间掐断流量，所以导致流量不够平滑。</p>
+<p>3.想要达到限流的目的，又不会掐断流量，使得流量更加平滑？可以考虑漏桶算法！需要注意的是，漏桶算法通常配置一个FIFO的队列使用以达到允许限流的作用。</p>
+<p>由于速率固定，即使在某个时刻下游处理能力过剩，也不能得到很好的利用，这是漏桶算法的一个短板。</p>
+<p>4.限流和瞬时流量其实并不矛盾，在大多数场景中，短时间突发流量系统是完全可以接受的。令牌桶算法就是不二之选了，令牌桶以固定的速率v产生令牌放入一个固定容量为n的桶中，当请求到达时尝试从桶中获取令牌。</p>
+<p>当桶满时，允许最大瞬时流量为n；当桶中没有剩余流量时则限流速率最低，为令牌生成的速率v。</p>
+<p>5.如何实现更加灵活的多级限流呢？滑动日志限流算法了解一下！这里的日志则是请求的时间戳，通过计算制定时间段内请求总数来实现灵活的限流。</p>
+<p>当然，由于需要存储时间戳信息，其占用的存储空间要比其他限流算法要大得多。</p>
+<p>不管黑猫白猫，能抓到老鼠的就是好猫。限流算法并没有绝对的好劣之分，如何选择合适的限流算法呢？不妨从性能，是否允许超出阈值，落地成本，流量平滑度，是否允许突发流量以及系统资源大小限制多方面考虑。</p>
+<p>当然，市面上也有比较成熟的限流工具和框架。如Google出品的Guava中基于令牌桶实现的限流组件，拿来即用；以及alibaba开源的面向分布式服务架构的流量控制框架Sentinel更会让你爱不释手，它是基于滑动窗口实现的。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="http://xbossniu.github.io">Xboss</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://xbossniu.github.io/%E9%9D%A2%E7%BB%8F/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/">http://xbossniu.github.io/%E9%9D%A2%E7%BB%8F/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E7%BB%8F/">面经</a></div><div class="post_share"><div class="social-share" data-image="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/Java/reentrantlock%E5%92%8Csychronized/" title="reentrantlock和sychronized"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Previous Post</div><div class="prev_info">reentrantlock和sychronized</div></div></a></div><div class="next-post pull-right"><a href="/Java/JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" title="JVM内存模型"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next Post</div><div class="next_info">JVM内存模型</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/%E9%9D%A2%E7%BB%8F/%E9%98%BF%E9%87%8C%E4%B8%80%E9%9D%A2/" title="阿里一面"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-01</div><div class="title">阿里一面</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comment</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://skymirror-1314315659.cos.ap-beijing.myqcloud.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230415115450.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Xboss</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">15</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Catalog</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">限流算法</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/redis/%E7%BC%93%E5%AD%98/" title="缓存">缓存</a><time datetime="2024-07-12T08:33:44.425Z" title="Created 2024-07-12 16:33:44">2024-07-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/Mysql/%E6%85%A2%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/" title="慢查询优化">慢查询优化</a><time datetime="2024-07-12T07:41:12.080Z" title="Created 2024-07-12 15:41:12">2024-07-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/Java/reentrantlock%E5%92%8Csychronized/" title="reentrantlock和sychronized">reentrantlock和sychronized</a><time datetime="2024-04-12T06:26:23.223Z" title="Created 2024-04-12 14:26:23">2024-04-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E9%9D%A2%E7%BB%8F/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/" title="限流算法">限流算法</a><time datetime="2024-04-12T06:26:23.164Z" title="Created 2024-04-12 14:26:23">2024-04-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/Java/JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" title="JVM内存模型">JVM内存模型</a><time datetime="2024-04-01T16:21:38.584Z" title="Created 2024-04-02 00:21:38">2024-04-02</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Xboss</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between single-column and double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll To Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '9ML8V14QSwveAHBCe3y3iPFp-9Nh9j0Va',
+      appKey: 'g4UqzV1A6gLluu7MLiuYySYr',
+      avatar: 'monsterid',
+      serverURLs: 'https://9ml8v14q.lc-cn-e1-shared.com',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function loadDisqus () {
+  var disqus_config = function () {
+    this.page.url = 'http://xbossniu.github.io/%E9%9D%A2%E7%BB%8F/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/'
+    this.page.identifier = '/%E9%9D%A2%E7%BB%8F/%E9%99%90%E6%B5%81%E7%AE%97%E6%B3%95/'
+    this.page.title = '限流算法'
+  };
+
+  window.disqusReset = () => {
+    DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  if (window.DISQUS) disqusReset()
+  else {
+    (function() { 
+      var d = document, s = d.createElement('script');
+      s.src = 'https://.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  }
+
+  document.getElementById('darkmode').addEventListener('click', () => {
+    setTimeout(() => window.disqusReset(), 200)
+  })
+}
+
+if ('Valine' === 'Disqus' || !false) {
+  if (false) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+  else loadDisqus()
+} else {
+  function loadOtherComment () {
+    loadDisqus()
+  }
+}
+</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
